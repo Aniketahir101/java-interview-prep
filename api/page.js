@@ -92,7 +92,9 @@ module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=3600');
 
   const { id } = req.query;
-  if (!id) return res.status(400).json({ error: 'Missing page id' });
+  if (!id || !/^[a-f0-9-]{32,36}$/.test(id)) {
+    return res.status(400).json({ error: 'Invalid or missing page id' });
+  }
 
   try {
     const topBlocks = await fetchAllBlocks(id);

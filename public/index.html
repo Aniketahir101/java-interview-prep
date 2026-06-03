@@ -53,9 +53,7 @@
     white-space: nowrap; display: flex; align-items: center; gap: 8px;
   }
   .logo span { color: var(--accent); }
-  .search-wrap {
-    flex: 1; max-width: 480px; position: relative;
-  }
+  .search-wrap { flex: 1; max-width: 480px; position: relative; }
   .search-wrap input {
     width: 100%; background: var(--bg3);
     border: 1px solid var(--border); border-radius: 8px;
@@ -73,43 +71,32 @@
   .header-stats strong { color: var(--accent); }
 
   /* ── LAYOUT ── */
-  .layout {
-    display: flex;
-    padding-top: var(--header-h);
-    min-height: 100vh;
-  }
+  .layout { display: flex; padding-top: var(--header-h); min-height: 100vh; }
 
   /* ── SIDEBAR ── */
   aside {
     width: var(--sidebar-w); flex-shrink: 0;
     position: fixed; top: var(--header-h); bottom: 0; left: 0;
     overflow-y: auto; overflow-x: hidden;
-    background: var(--bg2);
-    border-right: 1px solid var(--border);
+    background: var(--bg2); border-right: 1px solid var(--border);
     padding: 20px 0 40px;
     scrollbar-width: thin; scrollbar-color: var(--border) transparent;
   }
   aside::-webkit-scrollbar { width: 4px; }
   aside::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
   .sidebar-label {
     font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--muted);
-    padding: 0 20px 8px;
+    text-transform: uppercase; color: var(--muted); padding: 0 20px 8px;
   }
   .nav-item {
     display: flex; align-items: center; justify-content: space-between;
     padding: 7px 20px; cursor: pointer;
     font-size: 13px; color: var(--soft);
     transition: background 0.15s, color 0.15s;
-    border-left: 2px solid transparent;
-    text-decoration: none;
+    border-left: 2px solid transparent; text-decoration: none;
   }
   .nav-item:hover { background: var(--bg3); color: var(--text); }
-  .nav-item.active {
-    color: var(--accent); background: rgba(34,211,238,0.06);
-    border-left-color: var(--accent);
-  }
+  .nav-item.active { color: var(--accent); background: rgba(34,211,238,0.06); border-left-color: var(--accent); }
   .nav-item-left { display: flex; align-items: center; gap: 8px; }
   .nav-icon { font-size: 14px; }
   .nav-count {
@@ -119,18 +106,13 @@
   .nav-item.active .nav-count { background: rgba(34,211,238,0.12); color: var(--accent); }
 
   /* ── MAIN ── */
-  main {
-    flex: 1; margin-left: var(--sidebar-w);
-    padding: 40px 48px 80px;
-    max-width: 900px;
-  }
+  main { flex: 1; margin-left: var(--sidebar-w); padding: 40px 48px 80px; max-width: 900px; }
 
   /* ── SECTION ── */
-  .section-block { margin-bottom: 56px; }
+  .section-block { margin-bottom: 56px; scroll-margin-top: calc(var(--header-h) + 24px); }
   .section-header {
     display: flex; align-items: center; gap: 12px;
-    margin-bottom: 20px;
-    padding-bottom: 14px;
+    margin-bottom: 20px; padding-bottom: 14px;
     border-bottom: 1px solid var(--border);
   }
   .section-emoji { font-size: 22px; }
@@ -142,41 +124,42 @@
     border-radius: 20px; padding: 2px 10px;
   }
 
+  /* ── SKELETON LOADER ── */
+  .skeleton-row {
+    height: 54px; background: var(--bg2);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    margin-bottom: 8px; position: relative; overflow: hidden;
+  }
+  .skeleton-row::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+  @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+
   /* ── QUESTION CARD ── */
   .question-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 8px;
-    overflow: hidden;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); margin-bottom: 8px; overflow: hidden;
     transition: border-color 0.2s, box-shadow 0.2s;
+    animation: fadeUp 0.3s ease both;
   }
   .question-card:hover { border-color: #2a3347; }
   .question-card.open {
     border-color: rgba(34,211,238,0.3);
     box-shadow: 0 0 0 1px rgba(34,211,238,0.08), 0 4px 24px rgba(0,0,0,0.3);
   }
-
   .question-trigger {
     display: flex; align-items: flex-start; gap: 14px;
-    padding: 16px 20px; cursor: pointer;
-    user-select: none;
+    padding: 16px 20px; cursor: pointer; user-select: none;
   }
-  .q-number {
-    font-family: var(--mono); font-size: 11px;
-    color: var(--muted); padding-top: 2px;
-    min-width: 22px;
-  }
-  .q-text {
-    flex: 1; font-size: 14.5px; font-weight: 500; color: var(--text);
-    line-height: 1.5;
-  }
+  .q-number { font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 2px; min-width: 22px; }
+  .q-text { flex: 1; font-size: 14.5px; font-weight: 500; color: var(--text); line-height: 1.5; }
   .q-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 5px; }
   .tag {
     font-size: 11px; font-family: var(--mono); font-weight: 400;
     background: var(--bg3); color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: 4px; padding: 1px 7px;
+    border: 1px solid var(--border); border-radius: 4px; padding: 1px 7px;
   }
   .chevron {
     width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px;
@@ -185,33 +168,21 @@
   .question-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
 
   /* ── ANSWER PANEL ── */
-  .answer-panel {
-    display: none;
-    border-top: 1px solid var(--border);
-  }
+  .answer-panel { display: none; border-top: 1px solid var(--border); }
   .question-card.open .answer-panel { display: block; }
-
   .answer-loading {
     display: flex; align-items: center; gap: 10px;
     padding: 24px 20px; color: var(--muted); font-size: 13px;
   }
   .spinner {
     width: 16px; height: 16px; border-radius: 50%;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
+    border: 2px solid var(--border); border-top-color: var(--accent);
     animation: spin 0.7s linear infinite; flex-shrink: 0;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-
   .answer-sections { padding: 0 20px 20px; }
-
-  .answer-tab {
-    border-top: 1px solid var(--border);
-    padding: 16px 0 0;
-    margin-top: 4px;
-  }
+  .answer-tab { border-top: 1px solid var(--border); padding: 16px 0 0; margin-top: 4px; }
   .answer-tab:first-child { border-top: none; padding-top: 20px; }
-
   .tab-label {
     font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
     text-transform: uppercase; color: var(--muted);
@@ -219,69 +190,48 @@
   }
   .tab-label::before {
     content: ''; display: inline-block;
-    width: 3px; height: 12px; border-radius: 2px;
-    background: var(--accent);
+    width: 3px; height: 12px; border-radius: 2px; background: var(--accent);
   }
-
   .answer-tab p { font-size: 14px; color: var(--soft); margin-bottom: 10px; line-height: 1.7; }
   .answer-tab p:last-child { margin-bottom: 0; }
   .answer-tab ul, .answer-tab ol { padding-left: 20px; color: var(--soft); font-size: 14px; }
   .answer-tab li { margin-bottom: 5px; line-height: 1.6; }
-  .answer-tab h4, .answer-tab h5, .answer-tab h6 {
-    color: var(--text); font-weight: 600; margin: 14px 0 6px;
-    font-size: 14px;
-  }
-  .answer-tab blockquote {
-    border-left: 3px solid var(--accent); padding-left: 14px;
-    color: var(--soft); font-style: italic; margin: 10px 0;
-  }
+  .answer-tab h4, .answer-tab h5, .answer-tab h6 { color: var(--text); font-weight: 600; margin: 14px 0 6px; font-size: 14px; }
+  .answer-tab blockquote { border-left: 3px solid var(--accent); padding-left: 14px; color: var(--soft); font-style: italic; margin: 10px 0; }
   .answer-tab .divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
   .answer-tab .callout {
     display: flex; gap: 10px; background: var(--bg3);
     border: 1px solid var(--border); border-radius: 8px;
-    padding: 12px 14px; font-size: 13.5px; color: var(--soft);
-    margin: 10px 0;
+    padding: 12px 14px; font-size: 13.5px; color: var(--soft); margin: 10px 0;
   }
   .inline-code {
     font-family: var(--mono); font-size: 12.5px;
     background: var(--bg3); color: var(--accent);
-    padding: 1px 5px; border-radius: 4px;
-    border: 1px solid var(--border);
+    padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border);
   }
 
   /* ── CODE BLOCKS ── */
   .answer-tab pre {
-    background: #0d111a !important;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px 18px;
-    overflow-x: auto;
-    margin: 8px 0 12px;
-    font-size: 13px !important;
-    line-height: 1.6 !important;
+    background: #0d111a !important; border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px 18px; overflow-x: auto;
+    margin: 8px 0 12px; font-size: 13px !important; line-height: 1.6 !important;
   }
-  .answer-tab pre code {
-    font-family: var(--mono) !important;
-    font-size: 13px !important;
-    background: none !important;
-    border: none !important;
-    padding: 0 !important;
-  }
+  .answer-tab pre code { font-family: var(--mono) !important; font-size: 13px !important; background: none !important; border: none !important; padding: 0 !important; }
 
-  /* ── EMPTY / ERROR STATES ── */
-  .state-box {
-    text-align: center; padding: 80px 40px;
-    color: var(--muted); font-size: 14px;
-  }
+  /* ── STATES ── */
+  .state-box { text-align: center; padding: 80px 40px; color: var(--muted); font-size: 14px; }
   .state-box h3 { font-size: 18px; color: var(--soft); margin-bottom: 8px; }
-
   .no-results { padding: 40px; text-align: center; color: var(--muted); font-size: 14px; }
-
-  /* ── SEARCH HIGHLIGHT ── */
   mark { background: rgba(251,191,36,0.25); color: var(--amber); border-radius: 2px; }
 
-  /* ── SCROLL MARGIN ── */
-  .section-block { scroll-margin-top: calc(var(--header-h) + 24px); }
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .section-block { animation: fadeUp 0.35s ease both; }
+  .section-block:nth-child(1) { animation-delay: 0.04s; }
+  .section-block:nth-child(2) { animation-delay: 0.08s; }
+  .section-block:nth-child(3) { animation-delay: 0.12s; }
+  .section-block:nth-child(4) { animation-delay: 0.16s; }
+  .section-block:nth-child(5) { animation-delay: 0.20s; }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
@@ -289,20 +239,6 @@
     main { margin-left: 0; padding: 24px 20px 60px; }
     .header-stats { display: none; }
   }
-
-  /* ── FADE IN ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .section-block {
-    animation: fadeUp 0.4s ease both;
-  }
-  .section-block:nth-child(1)  { animation-delay: 0.05s; }
-  .section-block:nth-child(2)  { animation-delay: 0.10s; }
-  .section-block:nth-child(3)  { animation-delay: 0.15s; }
-  .section-block:nth-child(4)  { animation-delay: 0.20s; }
-  .section-block:nth-child(5)  { animation-delay: 0.25s; }
 </style>
 </head>
 <body>
@@ -333,10 +269,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
 <script>
-let allSections = [];
-let searchQuery = '';
+// ── STATE ──
+let allSections    = [];   // full section + questions data
+let filteredData   = null; // null = not filtering
+let renderedSlugs  = new Set();
+let sectionObs     = null;
+let searchQuery    = '';
+const loadedPages  = {};   // page content cache
 
-// ── FETCH QUESTIONS ──
+// ── INIT ──
 async function init() {
   try {
     const res = await fetch('/api/questions');
@@ -344,35 +285,35 @@ async function init() {
     const { sections } = await res.json();
     allSections = sections;
 
-    const total = sections.reduce((s, sec) => s + sec.questions.length, 0);
+    const total = sections.reduce((sum, s) => sum + s.count, 0);
     document.getElementById('header-stats').innerHTML =
       `<strong>${total}</strong> questions across <strong>${sections.length}</strong> topics`;
 
     renderSidebar(sections);
-    renderMain(sections);
+    renderStubs(sections);   // render section headers + skeletons only
+    setupLazyLoad();         // wire up IntersectionObserver
     setupSearch();
     setupScrollSpy();
   } catch (err) {
-    document.getElementById('loading-state').innerHTML = `
-      <h3>Failed to load</h3>
-      <p>${err.message}</p>`;
+    document.getElementById('loading-state').innerHTML =
+      `<h3>Failed to load</h3><p>${escHtml(err.message)}</p>`;
   }
 }
 
 // ── SIDEBAR ──
 function renderSidebar(sections) {
-  const aside = document.getElementById('sidebar');
-  aside.innerHTML = `<div class="sidebar-label">Topics</div>` +
+  document.getElementById('sidebar').innerHTML =
+    `<div class="sidebar-label">Topics</div>` +
     sections.map(s => `
       <a class="nav-item" href="#${s.slug}" data-slug="${s.slug}">
         <span class="nav-item-left">
           <span class="nav-icon">${s.icon}</span>
           <span>${s.name}</span>
         </span>
-        <span class="nav-count">${s.count}</span>
+        <span class="nav-count" id="cnt-${s.slug}">${s.count}</span>
       </a>`).join('');
 
-  aside.querySelectorAll('.nav-item').forEach(a => {
+  document.querySelectorAll('.nav-item').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
       const el = document.getElementById(a.dataset.slug);
@@ -381,73 +322,99 @@ function renderSidebar(sections) {
   });
 }
 
-// ── MAIN CONTENT ──
-function renderMain(sections, query = '') {
-  const main = document.getElementById('main');
+// ── RENDER STUBS (headers + skeleton rows) ──
+function renderStubs(sections) {
+  renderedSlugs.clear();
+  document.getElementById('main').innerHTML = sections.map(s => `
+    <div class="section-block" id="${s.slug}" data-slug="${s.slug}">
+      <div class="section-header">
+        <span class="section-emoji">${s.icon}</span>
+        <h2 class="section-title">${s.name}</h2>
+        <span class="section-pill" id="pill-${s.slug}">${s.count} questions</span>
+      </div>
+      <div id="qc-${s.slug}">
+        ${skeletonRows(Math.min(s.count, 4))}
+      </div>
+    </div>`).join('');
+}
 
-  if (sections.length === 0) {
-    main.innerHTML = `<div class="no-results">No questions found matching "<strong>${escHtml(query)}</strong>"</div>`;
+function skeletonRows(n) {
+  return Array(n).fill('<div class="skeleton-row"></div>').join('');
+}
+
+// ── LAZY LOAD via IntersectionObserver ──
+function setupLazyLoad() {
+  if (sectionObs) sectionObs.disconnect();
+
+  sectionObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const slug = entry.target.dataset.slug;
+      if (slug && !renderedSlugs.has(slug)) {
+        renderSectionQuestions(slug);
+        sectionObs.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '400px 0px' }); // load 400px before entering viewport
+
+  document.querySelectorAll('.section-block').forEach(el => sectionObs.observe(el));
+}
+
+// ── RENDER QUESTIONS INTO A SECTION ──
+function renderSectionQuestions(slug, query) {
+  const container = document.getElementById(`qc-${slug}`);
+  if (!container) return;
+
+  const activeQuery = query !== undefined ? query : searchQuery;
+
+  // Get the data source for this slug
+  const source = filteredData || allSections;
+  const section = source.find(s => s.slug === slug);
+  if (!section) return;
+
+  const questions = section.questions;
+
+  renderedSlugs.add(slug);
+
+  if (questions.length === 0) {
+    container.innerHTML = `<div style="padding:16px 0;color:var(--muted);font-size:13px">No questions match this search.</div>`;
     return;
   }
 
-  main.innerHTML = sections.map(section => {
-    const questions = section.questions.map((q, i) => {
-      const title = query ? highlight(q.question, query) : escHtml(q.question);
-      const tags = q.subTopics.map(t => `<span class="tag">${escHtml(t)}</span>`).join('');
-      return `
-        <div class="question-card" id="card-${q.id}" data-id="${q.id}">
-          <div class="question-trigger" onclick="toggleCard('${q.id}')">
-            <span class="q-number">${String(i + 1).padStart(2, '0')}</span>
-            <div class="q-text">
-              ${title}
-              ${tags ? `<div class="q-meta">${tags}</div>` : ''}
-            </div>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </div>
-          <div class="answer-panel" id="panel-${q.id}">
-            <div class="answer-loading">
-              <div class="spinner"></div> Loading answer…
-            </div>
-          </div>
-        </div>`;
-    }).join('');
-
+  container.innerHTML = questions.map((q, i) => {
+    const title = activeQuery ? highlight(q.question, activeQuery) : escHtml(q.question);
+    const tags  = q.subTopics.map(t => `<span class="tag">${escHtml(t)}</span>`).join('');
     return `
-      <div class="section-block" id="${section.slug}">
-        <div class="section-header">
-          <span class="section-emoji">${section.icon}</span>
-          <h2 class="section-title">${section.name}</h2>
-          <span class="section-pill">${section.count} questions</span>
+      <div class="question-card" id="card-${q.id}">
+        <div class="question-trigger" onclick="toggleCard('${q.id}')">
+          <span class="q-number">${String(i + 1).padStart(2, '0')}</span>
+          <div class="q-text">
+            ${title}
+            ${tags ? `<div class="q-meta">${tags}</div>` : ''}
+          </div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
         </div>
-        ${questions}
+        <div class="answer-panel" id="panel-${q.id}">
+          <div class="answer-loading"><div class="spinner"></div> Loading answer…</div>
+        </div>
       </div>`;
   }).join('');
 }
 
-// ── TOGGLE CARD ──
-const loadedPages = {};
-
+// ── TOGGLE QUESTION CARD ──
 async function toggleCard(id) {
-  const card = document.getElementById(`card-${id}`);
+  const card  = document.getElementById(`card-${id}`);
   const panel = document.getElementById(`panel-${id}`);
   const isOpen = card.classList.contains('open');
 
-  // Close all open cards
   document.querySelectorAll('.question-card.open').forEach(c => c.classList.remove('open'));
-
   if (isOpen) return;
 
   card.classList.add('open');
+  if (loadedPages[id]) { renderAnswerPanel(panel, loadedPages[id]); return; }
 
-  // Already loaded
-  if (loadedPages[id]) {
-    renderAnswerPanel(panel, loadedPages[id]);
-    return;
-  }
-
-  // Fetch from API
   try {
     const res = await fetch(`/api/page?id=${id}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -455,16 +422,16 @@ async function toggleCard(id) {
     loadedPages[id] = data;
     renderAnswerPanel(panel, data);
   } catch (err) {
-    panel.innerHTML = `<div class="answer-loading" style="color:#f87171">Failed to load answer: ${err.message}</div>`;
+    panel.innerHTML = `<div class="answer-loading" style="color:var(--red)">Failed to load: ${escHtml(err.message)}</div>`;
   }
 }
 
 // ── RENDER ANSWER PANEL ──
 const TAB_CONFIG = [
-  { key: 'Answer',               label: 'Answer',               icon: '💬' },
-  { key: 'Code Example',         label: 'Code Example',         icon: '⌨' },
-  { key: 'Key Points',           label: 'Key Points',           icon: '📌' },
-  { key: 'Follow-up Questions',  label: 'Follow-up Questions',  icon: '🔁' },
+  { key: 'Answer',              label: 'Answer',              icon: '💬' },
+  { key: 'Code Example',        label: 'Code Example',        icon: '⌨'  },
+  { key: 'Key Points',          label: 'Key Points',          icon: '📌' },
+  { key: 'Follow-up Questions', label: 'Follow-up Questions', icon: '🔁' },
 ];
 
 function renderAnswerPanel(panel, data) {
@@ -478,9 +445,8 @@ function renderAnswerPanel(panel, data) {
 
   panel.innerHTML = tabs
     ? `<div class="answer-sections">${tabs}</div>`
-    : `<div class="answer-loading" style="color:#64748b">No content found for this question.</div>`;
+    : `<div class="answer-loading" style="color:var(--muted)">No content found.</div>`;
 
-  // Re-run Prism on new content
   if (window.Prism) Prism.highlightAllUnder(panel);
 }
 
@@ -492,57 +458,82 @@ function setupSearch() {
     clearTimeout(debounce);
     debounce = setTimeout(() => {
       searchQuery = input.value.trim().toLowerCase();
-      filterAndRender();
-    }, 200);
+      applySearch();
+    }, 220);
   });
 }
 
-function filterAndRender() {
+function applySearch() {
   if (!searchQuery) {
-    renderMain(allSections);
+    // Restore full data
+    filteredData = null;
+    renderStubs(allSections);
+    setupLazyLoad();
     updateSidebarCounts(allSections);
+    setupScrollSpy();
     return;
   }
+
+  // Filter questions
   const filtered = allSections.map(s => ({
     ...s,
     questions: s.questions.filter(q =>
       q.question.toLowerCase().includes(searchQuery) ||
       q.subTopics.some(t => t.toLowerCase().includes(searchQuery))
     ),
-    count: s.questions.filter(q =>
-      q.question.toLowerCase().includes(searchQuery) ||
-      q.subTopics.some(t => t.toLowerCase().includes(searchQuery))
-    ).length,
-  })).filter(s => s.questions.length > 0);
+  })).map(s => ({ ...s, count: s.questions.length }));
 
-  renderMain(filtered, searchQuery);
+  const nonEmpty = filtered.filter(s => s.questions.length > 0);
+  filteredData = filtered; // keep full list for stub rendering (empty sections show 0)
+
+  // Render stubs for non-empty sections
+  if (nonEmpty.length === 0) {
+    document.getElementById('main').innerHTML =
+      `<div class="no-results">No questions found matching "<strong>${escHtml(searchQuery)}</strong>"</div>`;
+    updateSidebarCounts(filtered);
+    return;
+  }
+
+  renderedSlugs.clear();
+  document.getElementById('main').innerHTML = nonEmpty.map(s => `
+    <div class="section-block" id="${s.slug}" data-slug="${s.slug}">
+      <div class="section-header">
+        <span class="section-emoji">${s.icon}</span>
+        <h2 class="section-title">${s.name}</h2>
+        <span class="section-pill">${s.count} questions</span>
+      </div>
+      <div id="qc-${s.slug}"></div>
+    </div>`).join('');
+
+  // Render all search results immediately (no lazy load needed — already filtered)
+  nonEmpty.forEach(s => renderSectionQuestions(s.slug, searchQuery));
   updateSidebarCounts(filtered);
+  setupScrollSpy();
 }
 
+// ── SIDEBAR COUNTS ──
 function updateSidebarCounts(sections) {
   document.querySelectorAll('.nav-item').forEach(a => {
     const slug = a.dataset.slug;
     const sec = sections.find(s => s.slug === slug);
-    const countEl = a.querySelector('.nav-count');
+    const countEl = document.getElementById(`cnt-${slug}`);
     if (countEl) countEl.textContent = sec ? sec.count : '0';
-    a.style.opacity = sec ? '1' : '0.35';
+    a.style.opacity = (!sec || sec.count === 0) ? '0.35' : '1';
   });
 }
 
 // ── SCROLL SPY ──
 function setupScrollSpy() {
-  const observer = new IntersectionObserver(entries => {
+  const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
         const slug = e.target.id;
-        document.querySelectorAll('.nav-item').forEach(a => {
-          a.classList.toggle('active', a.dataset.slug === slug);
-        });
+        document.querySelectorAll('.nav-item').forEach(a =>
+          a.classList.toggle('active', a.dataset.slug === slug));
       }
     });
   }, { rootMargin: '-20% 0px -70% 0px' });
-
-  document.querySelectorAll('.section-block').forEach(el => observer.observe(el));
+  document.querySelectorAll('.section-block').forEach(el => obs.observe(el));
 }
 
 // ── UTILS ──
