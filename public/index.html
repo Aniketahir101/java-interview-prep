@@ -336,8 +336,15 @@ async function boot() {
 
 // ── LOGIN ──
 function showLogin() {
+  const input  = document.getElementById('login-input');
+  const btn    = document.getElementById('login-btn');
+  const errEl  = document.getElementById('login-error');
+  input.value       = '';
+  btn.disabled      = false;
+  btn.textContent   = 'Enter';
+  errEl.textContent = '';
   document.getElementById('login-screen').classList.add('visible');
-  document.getElementById('login-input').focus();
+  input.focus();
 }
 
 document.getElementById('login-input').addEventListener('keydown', e => {
