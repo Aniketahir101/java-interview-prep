@@ -1013,7 +1013,7 @@ function updateHeaderStats(sections) {
 }
 
 function updateSidebarCounts(sections) {
-  document.querySelectorAll('.nav-item').forEach(a => {
+  document.querySelectorAll('.nav-item[data-slug]').forEach(a => {
     const slug    = a.dataset.slug;
     const sec     = sections.find(s => s.slug === slug);
     const countEl = document.getElementById(`cnt-${slug}`);
@@ -1225,6 +1225,7 @@ async function surpriseMe() {
 
 // ── DASHBOARD ──
 async function showDashboard() {
+  if (currentView === 'dashboard') return; // already here — do nothing
   currentView = 'dashboard';
   updateSidebarActiveState();
 
