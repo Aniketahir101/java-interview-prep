@@ -1225,7 +1225,6 @@ async function surpriseMe() {
 
 // ── DASHBOARD ──
 async function showDashboard() {
-  currentView = 'questions'; // temp — prevent flash
   currentView = 'dashboard';
   updateSidebarActiveState();
 
@@ -1459,13 +1458,11 @@ function renderDashboard(stats, streak, recent) {
 // ── GO HOME ──
 function goHome() {
   if (!currentUser) return;
-  if (currentView !== 'questions') {
-    currentView = 'questions';
-    renderStubs(allSections); // always show full unfiltered list
-    setupLazyLoad();
-    setupScrollSpy();
-    updateSidebarActiveState();
-  }
+  currentView = 'questions';
+  renderStubs(allSections);
+  setupLazyLoad();
+  setupScrollSpy();
+  updateSidebarActiveState();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
