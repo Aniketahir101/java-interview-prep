@@ -14,61 +14,97 @@
     --bg3:       #141924;
     --border:    #1e2535;
     --accent:    #22d3ee;
-    --accent2:   #0e9aaf;
     --text:      #e2e8f0;
     --muted:     #64748b;
     --soft:      #94a3b8;
     --green:     #34d399;
     --amber:     #fbbf24;
     --red:       #f87171;
+    --purple:    #a78bfa;
     --sidebar-w: 260px;
     --header-h:  60px;
     --radius:    10px;
     --font:      'DM Sans', sans-serif;
     --mono:      'JetBrains Mono', monospace;
   }
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
 
-  body {
-    font-family: var(--font);
+  /* ── LOGIN SCREEN ── */
+  #login-screen {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
     background: var(--bg);
-    color: var(--text);
-    line-height: 1.65;
-    min-height: 100vh;
+    align-items: center; justify-content: center;
   }
+  #login-screen.visible { display: flex; }
+  .login-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 16px; padding: 48px 40px;
+    width: 100%; max-width: 400px; text-align: center;
+  }
+  .login-logo { font-size: 40px; margin-bottom: 16px; }
+  .login-title { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
+  .login-sub { font-size: 14px; color: var(--muted); margin-bottom: 32px; }
+  .login-input {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-family: var(--font);
+    font-size: 15px; padding: 12px 16px; outline: none;
+    transition: border-color 0.2s; text-align: center;
+    margin-bottom: 12px;
+  }
+  .login-input:focus { border-color: var(--accent); }
+  .login-input::placeholder { color: var(--muted); }
+  .login-btn {
+    width: 100%; background: var(--accent); border: none;
+    border-radius: 8px; color: #080c14; font-family: var(--font);
+    font-size: 15px; font-weight: 600; padding: 12px;
+    cursor: pointer; transition: opacity 0.2s;
+  }
+  .login-btn:hover { opacity: 0.88; }
+  .login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .login-error {
+    font-size: 13px; color: var(--red);
+    margin-top: 12px; min-height: 20px;
+  }
+  .login-hint { font-size: 12px; color: var(--muted); margin-top: 20px; }
 
   /* ── HEADER ── */
   header {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     height: var(--header-h);
-    background: rgba(8,12,20,0.92);
-    backdrop-filter: blur(12px);
+    background: rgba(8,12,20,0.92); backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 16px;
-    padding: 0 24px;
+    display: flex; align-items: center; gap: 16px; padding: 0 24px;
   }
-  .logo {
-    font-size: 15px; font-weight: 600; color: var(--text);
-    white-space: nowrap; display: flex; align-items: center; gap: 8px;
-  }
+  .logo { font-size: 15px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
   .logo span { color: var(--accent); }
   .search-wrap { flex: 1; max-width: 480px; position: relative; }
   .search-wrap input {
-    width: 100%; background: var(--bg3);
-    border: 1px solid var(--border); border-radius: 8px;
-    color: var(--text); font-family: var(--font); font-size: 13.5px;
-    padding: 8px 14px 8px 36px; outline: none;
+    width: 100%; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-family: var(--font);
+    font-size: 13.5px; padding: 8px 14px 8px 36px; outline: none;
     transition: border-color 0.2s;
   }
   .search-wrap input:focus { border-color: var(--accent); }
   .search-wrap input::placeholder { color: var(--muted); }
-  .search-icon {
-    position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
-    color: var(--muted); font-size: 14px; pointer-events: none;
-  }
-  .header-stats { margin-left: auto; font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; pointer-events: none; }
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+  .header-stats { font-size: 12px; color: var(--muted); white-space: nowrap; }
   .header-stats strong { color: var(--accent); }
+  .user-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 20px; padding: 5px 12px; font-size: 13px;
+  }
+  .user-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+  .user-name { color: var(--soft); }
+  .logout-btn {
+    font-size: 12px; color: var(--muted); background: none; border: none;
+    cursor: pointer; padding: 2px 4px; transition: color 0.15s;
+    font-family: var(--font);
+  }
+  .logout-btn:hover { color: var(--red); }
 
   /* ── LAYOUT ── */
   .layout { display: flex; padding-top: var(--header-h); min-height: 100vh; }
@@ -77,32 +113,23 @@
   aside {
     width: var(--sidebar-w); flex-shrink: 0;
     position: fixed; top: var(--header-h); bottom: 0; left: 0;
-    overflow-y: auto; overflow-x: hidden;
-    background: var(--bg2); border-right: 1px solid var(--border);
+    overflow-y: auto; background: var(--bg2); border-right: 1px solid var(--border);
     padding: 20px 0 40px;
     scrollbar-width: thin; scrollbar-color: var(--border) transparent;
   }
   aside::-webkit-scrollbar { width: 4px; }
   aside::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-  .sidebar-label {
-    font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--muted); padding: 0 20px 8px;
-  }
+  .sidebar-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding: 0 20px 8px; }
   .nav-item {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 7px 20px; cursor: pointer;
-    font-size: 13px; color: var(--soft);
-    transition: background 0.15s, color 0.15s;
-    border-left: 2px solid transparent; text-decoration: none;
+    padding: 7px 20px; cursor: pointer; font-size: 13px; color: var(--soft);
+    transition: background 0.15s, color 0.15s; border-left: 2px solid transparent; text-decoration: none;
   }
   .nav-item:hover { background: var(--bg3); color: var(--text); }
   .nav-item.active { color: var(--accent); background: rgba(34,211,238,0.06); border-left-color: var(--accent); }
   .nav-item-left { display: flex; align-items: center; gap: 8px; }
   .nav-icon { font-size: 14px; }
-  .nav-count {
-    font-size: 11px; background: var(--bg3); color: var(--muted);
-    border-radius: 10px; padding: 1px 7px; font-family: var(--mono);
-  }
+  .nav-count { font-size: 11px; background: var(--bg3); color: var(--muted); border-radius: 10px; padding: 1px 7px; font-family: var(--mono); }
   .nav-item.active .nav-count { background: rgba(34,211,238,0.12); color: var(--accent); }
 
   /* ── MAIN ── */
@@ -110,88 +137,73 @@
 
   /* ── SECTION ── */
   .section-block { margin-bottom: 56px; scroll-margin-top: calc(var(--header-h) + 24px); }
-  .section-header {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 20px; padding-bottom: 14px;
-    border-bottom: 1px solid var(--border);
-  }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
   .section-emoji { font-size: 22px; }
-  .section-title { font-size: 20px; font-weight: 600; color: var(--text); }
-  .section-pill {
-    margin-left: auto; font-size: 11px; font-family: var(--mono);
-    background: rgba(34,211,238,0.08); color: var(--accent);
-    border: 1px solid rgba(34,211,238,0.2);
-    border-radius: 20px; padding: 2px 10px;
-  }
+  .section-title { font-size: 20px; font-weight: 600; }
+  .section-pill { margin-left: auto; font-size: 11px; font-family: var(--mono); background: rgba(34,211,238,0.08); color: var(--accent); border: 1px solid rgba(34,211,238,0.2); border-radius: 20px; padding: 2px 10px; }
 
-  /* ── SKELETON LOADER ── */
-  .skeleton-row {
-    height: 54px; background: var(--bg2);
-    border: 1px solid var(--border); border-radius: var(--radius);
-    margin-bottom: 8px; position: relative; overflow: hidden;
-  }
-  .skeleton-row::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
-    animation: shimmer 1.6s ease-in-out infinite;
-  }
+  /* ── SKELETON ── */
+  .skeleton-row { height: 54px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; position: relative; overflow: hidden; }
+  .skeleton-row::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%); animation: shimmer 1.6s ease-in-out infinite; }
   @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
 
   /* ── QUESTION CARD ── */
-  .question-card {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: var(--radius); margin-bottom: 8px; overflow: hidden;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    animation: fadeUp 0.3s ease both;
-  }
+  .question-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; animation: fadeUp 0.3s ease both; }
   .question-card:hover { border-color: #2a3347; }
-  .question-card.open {
-    border-color: rgba(34,211,238,0.3);
-    box-shadow: 0 0 0 1px rgba(34,211,238,0.08), 0 4px 24px rgba(0,0,0,0.3);
-  }
-  .question-trigger {
-    display: flex; align-items: flex-start; gap: 14px;
-    padding: 16px 20px; cursor: pointer; user-select: none;
-  }
-  .q-number { font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 2px; min-width: 22px; }
-  .q-text { flex: 1; font-size: 14.5px; font-weight: 500; color: var(--text); line-height: 1.5; }
-  .q-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 5px; }
-  .tag {
-    font-size: 11px; font-family: var(--mono); font-weight: 400;
-    background: var(--bg3); color: var(--muted);
-    border: 1px solid var(--border); border-radius: 4px; padding: 1px 7px;
-  }
-  .chevron {
-    width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px;
-    color: var(--muted); transition: transform 0.25s, color 0.2s;
-  }
+  .question-card.open { border-color: rgba(34,211,238,0.3); box-shadow: 0 0 0 1px rgba(34,211,238,0.08), 0 4px 24px rgba(0,0,0,0.3); }
+  .question-trigger { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px 14px 20px; cursor: pointer; user-select: none; }
+  .q-number { font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 3px; min-width: 22px; }
+  .q-body { flex: 1; min-width: 0; }
+  .q-text { font-size: 14.5px; font-weight: 500; line-height: 1.5; }
+  .q-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+  .tag { font-size: 11px; font-family: var(--mono); background: var(--bg3); color: var(--muted); border: 1px solid var(--border); border-radius: 4px; padding: 1px 7px; }
+  .q-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; padding-top: 1px; }
+  .chevron { width: 18px; height: 18px; color: var(--muted); transition: transform 0.25s, color 0.2s; flex-shrink: 0; }
   .question-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
+
+  /* ── STATUS BADGE ── */
+  .status-badge {
+    font-size: 11px; font-family: var(--mono); font-weight: 500;
+    border-radius: 20px; padding: 3px 10px; cursor: pointer;
+    border: 1px solid transparent; white-space: nowrap;
+    transition: opacity 0.15s, transform 0.1s;
+    user-select: none;
+  }
+  .status-badge:hover { opacity: 0.8; transform: scale(0.97); }
+  .status-badge.not-started  { background: rgba(100,116,139,0.15); color: var(--muted);  border-color: rgba(100,116,139,0.3); }
+  .status-badge.in-progress  { background: rgba(251,191,36,0.12);  color: var(--amber);  border-color: rgba(251,191,36,0.3); }
+  .status-badge.revision     { background: rgba(248,113,113,0.12); color: var(--red);    border-color: rgba(248,113,113,0.3); }
+  .status-badge.confident    { background: rgba(52,211,153,0.12);  color: var(--green);  border-color: rgba(52,211,153,0.3); }
+
+  /* ── STATUS PICKER (dropdown) ── */
+  .status-picker {
+    position: absolute; z-index: 50;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 6px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    display: none; flex-direction: column; gap: 2px;
+    min-width: 160px;
+  }
+  .status-picker.open { display: flex; }
+  .picker-option {
+    font-size: 13px; padding: 8px 12px; border-radius: 6px;
+    cursor: pointer; transition: background 0.12s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .picker-option:hover { background: var(--bg3); }
+  .picker-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
   /* ── ANSWER PANEL ── */
   .answer-panel { display: none; border-top: 1px solid var(--border); }
   .question-card.open .answer-panel { display: block; }
-  .answer-loading {
-    display: flex; align-items: center; gap: 10px;
-    padding: 24px 20px; color: var(--muted); font-size: 13px;
-  }
-  .spinner {
-    width: 16px; height: 16px; border-radius: 50%;
-    border: 2px solid var(--border); border-top-color: var(--accent);
-    animation: spin 0.7s linear infinite; flex-shrink: 0;
-  }
+  .answer-loading { display: flex; align-items: center; gap: 10px; padding: 24px 20px; color: var(--muted); font-size: 13px; }
+  .spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border); border-top-color: var(--accent); animation: spin 0.7s linear infinite; flex-shrink: 0; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .answer-sections { padding: 0 20px 20px; }
   .answer-tab { border-top: 1px solid var(--border); padding: 16px 0 0; margin-top: 4px; }
   .answer-tab:first-child { border-top: none; padding-top: 20px; }
-  .tab-label {
-    font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--muted);
-    margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
-  }
-  .tab-label::before {
-    content: ''; display: inline-block;
-    width: 3px; height: 12px; border-radius: 2px; background: var(--accent);
-  }
+  .tab-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .tab-label::before { content: ''; display: inline-block; width: 3px; height: 12px; border-radius: 2px; background: var(--accent); }
   .answer-tab p { font-size: 14px; color: var(--soft); margin-bottom: 10px; line-height: 1.7; }
   .answer-tab p:last-child { margin-bottom: 0; }
   .answer-tab ul, .answer-tab ol { padding-left: 20px; color: var(--soft); font-size: 14px; }
@@ -199,23 +211,9 @@
   .answer-tab h4, .answer-tab h5, .answer-tab h6 { color: var(--text); font-weight: 600; margin: 14px 0 6px; font-size: 14px; }
   .answer-tab blockquote { border-left: 3px solid var(--accent); padding-left: 14px; color: var(--soft); font-style: italic; margin: 10px 0; }
   .answer-tab .divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
-  .answer-tab .callout {
-    display: flex; gap: 10px; background: var(--bg3);
-    border: 1px solid var(--border); border-radius: 8px;
-    padding: 12px 14px; font-size: 13.5px; color: var(--soft); margin: 10px 0;
-  }
-  .inline-code {
-    font-family: var(--mono); font-size: 12.5px;
-    background: var(--bg3); color: var(--accent);
-    padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border);
-  }
-
-  /* ── CODE BLOCKS ── */
-  .answer-tab pre {
-    background: #0d111a !important; border: 1px solid var(--border);
-    border-radius: 8px; padding: 16px 18px; overflow-x: auto;
-    margin: 8px 0 12px; font-size: 13px !important; line-height: 1.6 !important;
-  }
+  .answer-tab .callout { display: flex; gap: 10px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-size: 13.5px; color: var(--soft); margin: 10px 0; }
+  .inline-code { font-family: var(--mono); font-size: 12.5px; background: var(--bg3); color: var(--accent); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border); }
+  .answer-tab pre { background: #0d111a !important; border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; overflow-x: auto; margin: 8px 0 12px; font-size: 13px !important; line-height: 1.6 !important; }
   .answer-tab pre code { font-family: var(--mono) !important; font-size: 13px !important; background: none !important; border: none !important; padding: 0 !important; }
 
   /* ── STATES ── */
@@ -230,8 +228,6 @@
   .section-block:nth-child(1) { animation-delay: 0.04s; }
   .section-block:nth-child(2) { animation-delay: 0.08s; }
   .section-block:nth-child(3) { animation-delay: 0.12s; }
-  .section-block:nth-child(4) { animation-delay: 0.16s; }
-  .section-block:nth-child(5) { animation-delay: 0.20s; }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
@@ -243,13 +239,54 @@
 </head>
 <body>
 
+<!-- ── LOGIN SCREEN ── -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">☕</div>
+    <div class="login-title">Java Interview Prep</div>
+    <div class="login-sub">Enter your username to continue</div>
+    <input
+      type="text" id="login-input" class="login-input"
+      placeholder="your username" autocomplete="off"
+      spellcheck="false" autocapitalize="none"
+    >
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Enter</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-hint">Only team members can access this site.</div>
+  </div>
+</div>
+
+<!-- ── STATUS PICKER ── -->
+<div class="status-picker" id="status-picker">
+  <div class="picker-option" onclick="setStatus('Not Started')">
+    <span class="picker-dot" style="background:var(--muted)"></span> Not Started
+  </div>
+  <div class="picker-option" onclick="setStatus('In Progress')">
+    <span class="picker-dot" style="background:var(--amber)"></span> In Progress
+  </div>
+  <div class="picker-option" onclick="setStatus('Revision Needed')">
+    <span class="picker-dot" style="background:var(--red)"></span> Revision Needed
+  </div>
+  <div class="picker-option" onclick="setStatus('Confident')">
+    <span class="picker-dot" style="background:var(--green)"></span> Confident
+  </div>
+</div>
+
+<!-- ── HEADER ── -->
 <header>
   <div class="logo">☕ <span>Java</span> Interview Prep</div>
   <div class="search-wrap">
     <span class="search-icon">⌕</span>
     <input type="text" id="search" placeholder="Search questions..." autocomplete="off" spellcheck="false">
   </div>
-  <div class="header-stats" id="header-stats"></div>
+  <div class="header-right">
+    <div class="header-stats" id="header-stats"></div>
+    <div class="user-pill" id="user-pill" style="display:none">
+      <span class="user-dot"></span>
+      <span class="user-name" id="user-name"></span>
+      <button class="logout-btn" onclick="doLogout()" title="Log out">✕</button>
+    </div>
+  </div>
 </header>
 
 <div class="layout">
@@ -257,8 +294,7 @@
   <main id="main">
     <div class="state-box" id="loading-state">
       <div class="spinner" style="width:24px;height:24px;margin:0 auto 16px;border-width:3px"></div>
-      <h3>Loading questions…</h3>
-      <p>Fetching from Notion database</p>
+      <h3>Loading…</h3>
     </div>
   </main>
 </div>
@@ -270,30 +306,126 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
 <script>
 // ── STATE ──
-let allSections    = [];   // full section + questions data
-let filteredData   = null; // null = not filtering
-let renderedSlugs  = new Set();
-let sectionObs     = null;
-let searchQuery    = '';
-const loadedPages  = {};   // page content cache
+let currentUser   = null;
+let allSections   = [];
+let filteredData  = null;
+let renderedSlugs = new Set();
+let sectionObs    = null;
+let searchQuery   = '';
+const loadedPages = {};
+let userProgress  = {}; // { questionId: status }
 
-// ── INIT ──
-async function init() {
+// Active status picker state
+let pickerQuestionId = null;
+
+// ── BOOT ──
+async function boot() {
   try {
-    const res = await fetch('/api/questions');
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const { sections } = await res.json();
+    const res = await fetch('/api/me');
+    if (res.ok) {
+      const { username } = await res.json();
+      currentUser = username;
+      showApp();
+    } else {
+      showLogin();
+    }
+  } catch {
+    showLogin();
+  }
+}
+
+// ── LOGIN ──
+function showLogin() {
+  document.getElementById('login-screen').classList.add('visible');
+  document.getElementById('login-input').focus();
+}
+
+document.getElementById('login-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+async function doLogin() {
+  const input    = document.getElementById('login-input');
+  const btn      = document.getElementById('login-btn');
+  const errorEl  = document.getElementById('login-error');
+  const username = input.value.trim().toLowerCase();
+
+  if (!username) return;
+
+  btn.disabled  = true;
+  btn.textContent = 'Checking…';
+  errorEl.textContent = '';
+
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      currentUser = data.username;
+      document.getElementById('login-screen').classList.remove('visible');
+      showApp();
+    } else {
+      errorEl.textContent = data.error || 'Login failed.';
+      btn.disabled = false;
+      btn.textContent = 'Enter';
+      input.focus();
+    }
+  } catch {
+    errorEl.textContent = 'Network error. Please try again.';
+    btn.disabled = false;
+    btn.textContent = 'Enter';
+  }
+}
+
+// ── LOGOUT ──
+async function doLogout() {
+  await fetch('/api/logout', { method: 'POST' });
+  currentUser  = null;
+  userProgress = {};
+  document.getElementById('user-pill').style.display = 'none';
+  document.getElementById('main').innerHTML = '';
+  document.getElementById('sidebar').innerHTML = '';
+  showLogin();
+}
+
+// ── SHOW APP ──
+async function showApp() {
+  // Show username in header
+  document.getElementById('user-name').textContent = currentUser;
+  document.getElementById('user-pill').style.display = 'flex';
+
+  // Load questions + progress in parallel
+  try {
+    const [sectionsRes, progressRes] = await Promise.all([
+      fetch('/api/questions'),
+      fetch('/api/progress'),
+    ]);
+
+    if (!sectionsRes.ok) throw new Error('Failed to load questions');
+
+    const { sections } = await sectionsRes.json();
     allSections = sections;
 
-    const total = sections.reduce((sum, s) => sum + s.count, 0);
+    if (progressRes.ok) {
+      userProgress = await progressRes.json();
+    }
+
+    const total = sections.reduce((s, sec) => s + sec.count, 0);
     document.getElementById('header-stats').innerHTML =
-      `<strong>${total}</strong> questions across <strong>${sections.length}</strong> topics`;
+      `<strong>${total}</strong> questions · <strong>${sections.length}</strong> topics`;
 
     renderSidebar(sections);
-    renderStubs(sections);   // render section headers + skeletons only
-    setupLazyLoad();         // wire up IntersectionObserver
+    renderStubs(sections);
+    setupLazyLoad();
     setupSearch();
     setupScrollSpy();
+    setupPickerDismiss();
+
   } catch (err) {
     document.getElementById('loading-state').innerHTML =
       `<h3>Failed to load</h3><p>${escHtml(err.message)}</p>`;
@@ -303,7 +435,7 @@ async function init() {
 // ── SIDEBAR ──
 function renderSidebar(sections) {
   document.getElementById('sidebar').innerHTML =
-    `<div class="sidebar-label">Topics</div>` +
+    '<div class="sidebar-label">Topics</div>' +
     sections.map(s => `
       <a class="nav-item" href="#${s.slug}" data-slug="${s.slug}">
         <span class="nav-item-left">
@@ -316,13 +448,13 @@ function renderSidebar(sections) {
   document.querySelectorAll('.nav-item').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
-      const el = document.getElementById(a.dataset.slug);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById(a.dataset.slug)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
 }
 
-// ── RENDER STUBS (headers + skeleton rows) ──
+// ── STUBS ──
 function renderStubs(sections) {
   renderedSlugs.clear();
   document.getElementById('main').innerHTML = sections.map(s => `
@@ -330,11 +462,9 @@ function renderStubs(sections) {
       <div class="section-header">
         <span class="section-emoji">${s.icon}</span>
         <h2 class="section-title">${s.name}</h2>
-        <span class="section-pill" id="pill-${s.slug}">${s.count} questions</span>
+        <span class="section-pill">${s.count} questions</span>
       </div>
-      <div id="qc-${s.slug}">
-        ${skeletonRows(Math.min(s.count, 4))}
-      </div>
+      <div id="qc-${s.slug}">${skeletonRows(Math.min(s.count, 4))}</div>
     </div>`).join('');
 }
 
@@ -342,59 +472,62 @@ function skeletonRows(n) {
   return Array(n).fill('<div class="skeleton-row"></div>').join('');
 }
 
-// ── LAZY LOAD via IntersectionObserver ──
+// ── LAZY LOAD ──
 function setupLazyLoad() {
   if (sectionObs) sectionObs.disconnect();
-
   sectionObs = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const slug = entry.target.dataset.slug;
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const slug = e.target.dataset.slug;
       if (slug && !renderedSlugs.has(slug)) {
         renderSectionQuestions(slug);
-        sectionObs.unobserve(entry.target);
+        sectionObs.unobserve(e.target);
       }
     });
-  }, { rootMargin: '400px 0px' }); // load 400px before entering viewport
-
+  }, { rootMargin: '400px 0px' });
   document.querySelectorAll('.section-block').forEach(el => sectionObs.observe(el));
 }
 
-// ── RENDER QUESTIONS INTO A SECTION ──
+// ── RENDER QUESTIONS ──
 function renderSectionQuestions(slug, query) {
   const container = document.getElementById(`qc-${slug}`);
   if (!container) return;
 
   const activeQuery = query !== undefined ? query : searchQuery;
-
-  // Get the data source for this slug
-  const source = filteredData || allSections;
-  const section = source.find(s => s.slug === slug);
+  const source      = filteredData || allSections;
+  const section     = source.find(s => s.slug === slug);
   if (!section) return;
-
-  const questions = section.questions;
 
   renderedSlugs.add(slug);
 
-  if (questions.length === 0) {
-    container.innerHTML = `<div style="padding:16px 0;color:var(--muted);font-size:13px">No questions match this search.</div>`;
+  if (section.questions.length === 0) {
+    container.innerHTML = `<div style="padding:16px 0;color:var(--muted);font-size:13px">No questions match.</div>`;
     return;
   }
 
-  container.innerHTML = questions.map((q, i) => {
-    const title = activeQuery ? highlight(q.question, activeQuery) : escHtml(q.question);
-    const tags  = q.subTopics.map(t => `<span class="tag">${escHtml(t)}</span>`).join('');
+  container.innerHTML = section.questions.map((q, i) => {
+    const title  = activeQuery ? highlight(q.question, activeQuery) : escHtml(q.question);
+    const tags   = q.subTopics.map(t => `<span class="tag">${escHtml(t)}</span>`).join('');
+    const status = userProgress[q.id] || 'Not Started';
     return `
       <div class="question-card" id="card-${q.id}">
-        <div class="question-trigger" onclick="toggleCard('${q.id}')">
+        <div class="question-trigger" onclick="toggleCard('${q.id}', event)">
           <span class="q-number">${String(i + 1).padStart(2, '0')}</span>
-          <div class="q-text">
-            ${title}
+          <div class="q-body">
+            <div class="q-text">${title}</div>
             ${tags ? `<div class="q-meta">${tags}</div>` : ''}
           </div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
+          <div class="q-right">
+            <span
+              class="status-badge ${statusClass(status)}"
+              id="badge-${q.id}"
+              onclick="openPicker('${q.id}', event)"
+              title="Click to change status"
+            >${status}</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
         </div>
         <div class="answer-panel" id="panel-${q.id}">
           <div class="answer-loading"><div class="spinner"></div> Loading answer…</div>
@@ -403,8 +536,77 @@ function renderSectionQuestions(slug, query) {
   }).join('');
 }
 
-// ── TOGGLE QUESTION CARD ──
-async function toggleCard(id) {
+// ── STATUS HELPERS ──
+function statusClass(status) {
+  const map = {
+    'Not Started':    'not-started',
+    'In Progress':    'in-progress',
+    'Revision Needed':'revision',
+    'Confident':      'confident',
+  };
+  return map[status] || 'not-started';
+}
+
+// ── STATUS PICKER ──
+function openPicker(questionId, event) {
+  event.stopPropagation(); // don't toggle the card
+  pickerQuestionId = questionId;
+
+  const picker = document.getElementById('status-picker');
+  const badge  = document.getElementById(`badge-${questionId}`);
+  const rect   = badge.getBoundingClientRect();
+
+  picker.style.top  = `${rect.bottom + window.scrollY + 6}px`;
+  picker.style.left = `${rect.left + window.scrollX}px`;
+  picker.classList.add('open');
+}
+
+function setupPickerDismiss() {
+  document.addEventListener('click', e => {
+    const picker = document.getElementById('status-picker');
+    if (!picker.contains(e.target)) {
+      picker.classList.remove('open');
+      pickerQuestionId = null;
+    }
+  });
+}
+
+async function setStatus(status) {
+  const questionId = pickerQuestionId;
+  if (!questionId) return;
+
+  // Close picker
+  document.getElementById('status-picker').classList.remove('open');
+  pickerQuestionId = null;
+
+  // Optimistic UI update — update badge immediately
+  const badge = document.getElementById(`badge-${questionId}`);
+  if (badge) {
+    badge.textContent  = status;
+    badge.className    = `status-badge ${statusClass(status)}`;
+  }
+
+  userProgress[questionId] = status;
+
+  // Save to backend
+  try {
+    const res = await fetch('/api/progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ questionId, status }),
+    });
+    if (!res.ok) throw new Error('Save failed');
+  } catch (err) {
+    console.error('Failed to save status:', err);
+    // Could show a toast here in future
+  }
+}
+
+// ── TOGGLE CARD ──
+async function toggleCard(id, event) {
+  // Don't toggle if clicking the status badge
+  if (event.target.classList.contains('status-badge')) return;
+
   const card  = document.getElementById(`card-${id}`);
   const panel = document.getElementById(`panel-${id}`);
   const isOpen = card.classList.contains('open');
@@ -426,7 +628,7 @@ async function toggleCard(id) {
   }
 }
 
-// ── RENDER ANSWER PANEL ──
+// ── RENDER ANSWER ──
 const TAB_CONFIG = [
   { key: 'Answer',              label: 'Answer',              icon: '💬' },
   { key: 'Code Example',        label: 'Code Example',        icon: '⌨'  },
@@ -437,11 +639,8 @@ const TAB_CONFIG = [
 function renderAnswerPanel(panel, data) {
   const tabs = TAB_CONFIG
     .filter(t => data[t.key] && data[t.key].trim())
-    .map(t => `
-      <div class="answer-tab">
-        <div class="tab-label">${t.icon} ${t.label}</div>
-        ${data[t.key]}
-      </div>`).join('');
+    .map(t => `<div class="answer-tab"><div class="tab-label">${t.icon} ${t.label}</div>${data[t.key]}</div>`)
+    .join('');
 
   panel.innerHTML = tabs
     ? `<div class="answer-sections">${tabs}</div>`
@@ -465,7 +664,6 @@ function setupSearch() {
 
 function applySearch() {
   if (!searchQuery) {
-    // Restore full data
     filteredData = null;
     renderStubs(allSections);
     setupLazyLoad();
@@ -474,7 +672,6 @@ function applySearch() {
     return;
   }
 
-  // Filter questions
   const filtered = allSections.map(s => ({
     ...s,
     questions: s.questions.filter(q =>
@@ -483,10 +680,9 @@ function applySearch() {
     ),
   })).map(s => ({ ...s, count: s.questions.length }));
 
+  filteredData = filtered;
   const nonEmpty = filtered.filter(s => s.questions.length > 0);
-  filteredData = filtered; // keep full list for stub rendering (empty sections show 0)
 
-  // Render stubs for non-empty sections
   if (nonEmpty.length === 0) {
     document.getElementById('main').innerHTML =
       `<div class="no-results">No questions found matching "<strong>${escHtml(searchQuery)}</strong>"</div>`;
@@ -505,17 +701,15 @@ function applySearch() {
       <div id="qc-${s.slug}"></div>
     </div>`).join('');
 
-  // Render all search results immediately (no lazy load needed — already filtered)
   nonEmpty.forEach(s => renderSectionQuestions(s.slug, searchQuery));
   updateSidebarCounts(filtered);
   setupScrollSpy();
 }
 
-// ── SIDEBAR COUNTS ──
 function updateSidebarCounts(sections) {
   document.querySelectorAll('.nav-item').forEach(a => {
-    const slug = a.dataset.slug;
-    const sec = sections.find(s => s.slug === slug);
+    const slug    = a.dataset.slug;
+    const sec     = sections.find(s => s.slug === slug);
     const countEl = document.getElementById(`cnt-${slug}`);
     if (countEl) countEl.textContent = sec ? sec.count : '0';
     a.style.opacity = (!sec || sec.count === 0) ? '0.35' : '1';
@@ -527,9 +721,8 @@ function setupScrollSpy() {
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
-        const slug = e.target.id;
         document.querySelectorAll('.nav-item').forEach(a =>
-          a.classList.toggle('active', a.dataset.slug === slug));
+          a.classList.toggle('active', a.dataset.slug === e.target.id));
       }
     });
   }, { rootMargin: '-20% 0px -70% 0px' });
@@ -549,7 +742,7 @@ function highlight(text, query) {
   return escaped.replace(re, '<mark>$1</mark>');
 }
 
-init();
+boot();
 </script>
 </body>
 </html>
