@@ -6,7 +6,8 @@
 <title>Java Backend Interview Prep</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+<link id="prism-dark"  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+<link id="prism-light" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" disabled>
 <style>
   :root {
     --bg:        #080c14;
@@ -235,6 +236,55 @@
     main { margin-left: 0; padding: 24px 20px 60px; }
     .header-stats { display: none; }
   }
+
+  /* ── LIGHT MODE ── */
+  body.light {
+    --bg: #f8fafc; --bg2: #ffffff; --bg3: #f1f5f9; --border: #e2e8f0;
+    --text: #0f172a; --muted: #64748b; --soft: #334155;
+    --accent: #0891b2; --green: #059669; --amber: #d97706; --red: #dc2626;
+  }
+  body.light header { background: rgba(248,250,252,0.92); }
+  body.light aside  { background: var(--bg2); }
+  body.light .question-card.open { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  body.light .status-picker { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+  body.light .answer-tab pre { background: #f1f5f9 !important; border-color: #e2e8f0; }
+  body.light .skeleton-row::after { background: linear-gradient(90deg,transparent,rgba(0,0,0,0.04),transparent); }
+
+  /* ── FONT SIZES ── */
+  body.font-sm .q-text { font-size: 13px; }
+  body.font-sm .answer-tab p, body.font-sm .answer-tab li { font-size: 12.5px; }
+  body.font-sm .answer-tab pre, body.font-sm .answer-tab pre code { font-size: 12px !important; }
+  body.font-lg .q-text { font-size: 16.5px; }
+  body.font-lg .answer-tab p, body.font-lg .answer-tab li { font-size: 15.5px; }
+  body.font-lg .answer-tab pre, body.font-lg .answer-tab pre code { font-size: 14.5px !important; }
+
+  /* ── HEADER CONTROLS ── */
+  .ctrl-btn {
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--soft); font-size: 13px; padding: 6px 10px; cursor: pointer;
+    transition: all 0.15s; font-family: var(--font); white-space: nowrap;
+  }
+  .ctrl-btn:hover { border-color: var(--accent); color: var(--text); }
+
+  /* ── SECTION ACTIONS ── */
+  .section-actions { display: flex; gap: 4px; margin-left: 8px; }
+  .section-action-btn {
+    font-size: 11px; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 6px; color: var(--muted); padding: 2px 8px; cursor: pointer;
+    font-family: var(--mono); transition: color 0.15s, border-color 0.15s;
+  }
+  .section-action-btn:hover { color: var(--accent); border-color: rgba(34,211,238,0.4); }
+
+  /* ── COPY BUTTON ── */
+  .answer-tab pre { position: relative; }
+  .copy-btn {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--muted); font-size: 11px; padding: 3px 8px; cursor: pointer;
+    font-family: var(--mono); opacity: 0; transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .answer-tab pre:hover .copy-btn { opacity: 1; }
+  .copy-btn.copied { color: var(--green); border-color: var(--green); opacity: 1; }
 </style>
 </head>
 <body>
@@ -280,6 +330,8 @@
     <input type="text" id="search" placeholder="Search questions..." autocomplete="off" spellcheck="false">
   </div>
   <div class="header-right">
+    <button class="ctrl-btn" id="font-btn"  onclick="cycleFontSize()" title="Adjust font size">A</button>
+    <button class="ctrl-btn" id="theme-btn" onclick="toggleTheme()"   title="Toggle theme">🌙</button>
     <div class="header-stats" id="header-stats"></div>
     <div class="user-pill" id="user-pill" style="display:none">
       <span class="user-dot"></span>
@@ -320,6 +372,7 @@ let pickerQuestionId = null;
 
 // ── BOOT ──
 async function boot() {
+  initPreferences();
   try {
     const res = await fetch('/api/me');
     if (res.ok) {
@@ -470,6 +523,10 @@ function renderStubs(sections) {
         <span class="section-emoji">${s.icon}</span>
         <h2 class="section-title">${s.name}</h2>
         <span class="section-pill">${s.count} questions</span>
+        <div class="section-actions">
+          <button class="section-action-btn" onclick="expandAllInSection('${s.slug}')">expand all</button>
+          <button class="section-action-btn" onclick="collapseAllInSection('${s.slug}')">collapse all</button>
+        </div>
       </div>
       <div id="qc-${s.slug}">${skeletonRows(Math.min(s.count, 4))}</div>
     </div>`).join('');
@@ -654,6 +711,7 @@ function renderAnswerPanel(panel, data) {
     : `<div class="answer-loading" style="color:var(--muted)">No content found.</div>`;
 
   if (window.Prism) Prism.highlightAllUnder(panel);
+  addCopyButtons(panel);
 }
 
 // ── SEARCH ──
@@ -704,6 +762,10 @@ function applySearch() {
         <span class="section-emoji">${s.icon}</span>
         <h2 class="section-title">${s.name}</h2>
         <span class="section-pill">${s.count} questions</span>
+        <div class="section-actions">
+          <button class="section-action-btn" onclick="expandAllInSection('${s.slug}')">expand all</button>
+          <button class="section-action-btn" onclick="collapseAllInSection('${s.slug}')">collapse all</button>
+        </div>
       </div>
       <div id="qc-${s.slug}"></div>
     </div>`).join('');
@@ -748,6 +810,103 @@ function highlight(text, query) {
   const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
   return escaped.replace(re, '<mark>$1</mark>');
 }
+
+// ── THEME ──
+function initPreferences() {
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  applyFontSize(localStorage.getItem('fontSize') || 'md');
+}
+
+function applyTheme(theme) {
+  document.body.classList.toggle('light', theme === 'light');
+  const btn = document.getElementById('theme-btn');
+  if (btn) btn.textContent = theme === 'dark' ? '🌙' : '☀️';
+  const dark  = document.getElementById('prism-dark');
+  const light = document.getElementById('prism-light');
+  if (dark)  dark.disabled  = (theme !== 'dark');
+  if (light) light.disabled = (theme !== 'light');
+}
+
+function toggleTheme() {
+  const next = (localStorage.getItem('theme') || 'dark') === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('theme', next);
+  applyTheme(next);
+}
+
+// ── FONT SIZE ──
+const FONT_CYCLE = ['sm', 'md', 'lg'];
+const FONT_LABEL = { sm: 'A−', md: 'A', lg: 'A+' };
+
+function applyFontSize(size) {
+  document.body.classList.remove('font-sm', 'font-lg');
+  if (size === 'sm') document.body.classList.add('font-sm');
+  if (size === 'lg') document.body.classList.add('font-lg');
+  const btn = document.getElementById('font-btn');
+  if (btn) btn.textContent = FONT_LABEL[size] || 'A';
+}
+
+function cycleFontSize() {
+  const current = localStorage.getItem('fontSize') || 'md';
+  const next    = FONT_CYCLE[(FONT_CYCLE.indexOf(current) + 1) % FONT_CYCLE.length];
+  localStorage.setItem('fontSize', next);
+  applyFontSize(next);
+}
+
+// ── COPY BUTTON ──
+function addCopyButtons(container) {
+  container.querySelectorAll('pre').forEach(pre => {
+    if (pre.querySelector('.copy-btn')) return;
+    const btn = document.createElement('button');
+    btn.className   = 'copy-btn';
+    btn.textContent = 'Copy';
+    btn.addEventListener('click', async e => {
+      e.stopPropagation();
+      const code = pre.querySelector('code')?.innerText || pre.innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      } catch {
+        btn.textContent = 'Failed';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+      }
+    });
+    pre.appendChild(btn);
+  });
+}
+
+// ── EXPAND / COLLAPSE ALL ──
+function collapseAllInSection(slug) {
+  document.querySelectorAll(`#qc-${slug} .question-card`)
+    .forEach(c => c.classList.remove('open'));
+}
+
+async function expandAllInSection(slug) {
+  const cards = Array.from(document.querySelectorAll(`#qc-${slug} .question-card`));
+  cards.forEach(c => c.classList.add('open'));
+
+  // Render already-cached pages immediately
+  cards.forEach(card => {
+    const id    = card.id.replace('card-', '');
+    const panel = document.getElementById(`panel-${id}`);
+    if (panel && loadedPages[id]) renderAnswerPanel(panel, loadedPages[id]);
+  });
+
+  // Fetch uncached pages (fire in parallel, Vercel edge cache handles rate limiting)
+  const uncached = cards.filter(c => !loadedPages[c.id.replace('card-', '')]);
+  await Promise.allSettled(uncached.map(card => {
+    const id    = card.id.replace('card-', '');
+    const panel = document.getElementById(`panel-${id}`);
+    return fetch(`/api/page?id=${id}`)
+      .then(r => r.json())
+      .then(data => { loadedPages[id] = data; if (panel) renderAnswerPanel(panel, data); })
+      .catch(() => {
+        if (panel) panel.innerHTML = `<div class="answer-loading" style="color:var(--red)">Failed to load</div>`;
+      });
+  }));
+}
+
 
 boot();
 </script>
