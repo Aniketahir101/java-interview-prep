@@ -285,6 +285,48 @@
   }
   .answer-tab pre:hover .copy-btn { opacity: 1; }
   .copy-btn.copied { color: var(--green); border-color: var(--green); opacity: 1; }
+
+  /* ── STATUS FILTER ── */
+  .filter-section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px 6px;
+  }
+  .filter-pills { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 16px 14px; }
+  .filter-pill {
+    font-size: 11px; padding: 3px 9px; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--bg3);
+    color: var(--muted); cursor: pointer; font-family: var(--mono);
+    transition: all 0.15s; white-space: nowrap; user-select: none;
+  }
+  .filter-pill:hover  { border-color: var(--accent); color: var(--text); }
+  .filter-pill.active { background: rgba(34,211,238,0.12); color: var(--accent); border-color: var(--accent); font-weight: 600; }
+  .filter-clear {
+    font-size: 11px; color: var(--muted); cursor: pointer; font-family: var(--mono);
+    transition: color 0.15s; padding: 2px 0;
+  }
+  .filter-clear:hover { color: var(--red); }
+  .sidebar-divider { border: none; border-top: 1px solid var(--border); margin: 4px 0 8px; }
+
+  /* ── ACTIVE FILTER BANNER ── */
+  .filter-banner {
+    display: none; align-items: center; justify-content: space-between;
+    background: rgba(34,211,238,0.06); border-bottom: 1px solid rgba(34,211,238,0.15);
+    padding: 7px 20px; font-size: 12px; color: var(--accent);
+    position: sticky; top: var(--header-h); z-index: 10;
+  }
+  .filter-banner.visible { display: flex; }
+  .filter-banner-clear { cursor: pointer; color: var(--muted); font-size: 11px; }
+  .filter-banner-clear:hover { color: var(--red); }
+
+  /* ── SURPRISE ME ── */
+  .surprise-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin: 8px 16px 16px; padding: 9px 12px; width: calc(100% - 32px);
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--soft); font-size: 13px; cursor: pointer; font-family: var(--font);
+    transition: all 0.15s;
+  }
+  .surprise-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(34,211,238,0.04); }
 </style>
 </head>
 <body>
@@ -341,6 +383,10 @@
   </div>
 </header>
 
+<div class="filter-banner" id="filter-banner">
+  <span id="filter-banner-text"></span>
+  <span class="filter-banner-clear" onclick="setStatusFilter('')">✕ Clear filter</span>
+</div>
 <div class="layout">
   <aside id="sidebar"></aside>
   <main id="main">
@@ -369,6 +415,7 @@ let userProgress  = {}; // { questionId: status }
 
 // Active status picker state
 let pickerQuestionId = null;
+let statusFilter = ''; // active status filter
 
 // ── BOOT ──
 async function boot() {
@@ -475,9 +522,7 @@ async function showApp() {
       userProgress = await progressRes.json();
     }
 
-    const total = sections.reduce((s, sec) => s + sec.count, 0);
-    document.getElementById('header-stats').innerHTML =
-      `<strong>${total}</strong> questions · <strong>${sections.length}</strong> topics`;
+    updateHeaderStats(sections);
 
     renderSidebar(sections);
     renderStubs(sections);
@@ -494,8 +539,26 @@ async function showApp() {
 
 // ── SIDEBAR ──
 function renderSidebar(sections) {
+  const STATUS_OPTS = [
+    { value: '',               label: 'All',           cls: '' },
+    { value: 'Not Started',    label: 'Not Started',   cls: '' },
+    { value: 'In Progress',    label: 'In Progress',   cls: '' },
+    { value: 'Revision Needed',label: 'Revision',      cls: '' },
+    { value: 'Confident',      label: 'Confident',     cls: '' },
+  ];
+
   document.getElementById('sidebar').innerHTML =
-    '<div class="sidebar-label">Topics</div>' +
+    // ── filter section ──
+    `<div class="filter-section-header">
+      <span class="sidebar-label" style="padding:0">Filter by status</span>
+      <span class="filter-clear" id="filter-clear" onclick="setStatusFilter('')" style="display:none">clear ✕</span>
+    </div>
+    <div class="filter-pills" id="filter-pills">
+      ${STATUS_OPTS.map(o => `<span class="filter-pill ${statusFilter === o.value ? 'active' : ''}" data-value="${o.value}" onclick="setStatusFilter('${o.value}')">${o.label}</span>`).join('')}
+    </div>
+    <hr class="sidebar-divider">` +
+    // ── topics ──
+    '<div class="sidebar-label" style="padding: 0 20px 8px">Topics</div>' +
     sections.map(s => `
       <a class="nav-item" href="#${s.slug}" data-slug="${s.slug}">
         <span class="nav-item-left">
@@ -503,7 +566,10 @@ function renderSidebar(sections) {
           <span>${s.name}</span>
         </span>
         <span class="nav-count" id="cnt-${s.slug}">${s.count}</span>
-      </a>`).join('');
+      </a>`).join('') +
+    // ── surprise me ──
+    `<hr class="sidebar-divider" style="margin-top:12px">
+    <button class="surprise-btn" onclick="surpriseMe()">🎲 Surprise Me</button>`;
 
   document.querySelectorAll('.nav-item').forEach(a => {
     a.addEventListener('click', e => {
@@ -669,7 +735,7 @@ async function setStatus(status) {
 // ── TOGGLE CARD ──
 async function toggleCard(id, event) {
   // Don't toggle if clicking the status badge
-  if (event.target.classList.contains('status-badge')) return;
+  if (event?.target?.classList?.contains('status-badge')) return;
 
   const card  = document.getElementById(`card-${id}`);
   const panel = document.getElementById(`panel-${id}`);
@@ -728,30 +794,57 @@ function setupSearch() {
 }
 
 function applySearch() {
-  if (!searchQuery) {
+  const hasSearch = searchQuery.length > 0;
+  const hasFilter = statusFilter.length > 0;
+
+  // Update filter banner
+  const banner   = document.getElementById('filter-banner');
+  const bannerTx = document.getElementById('filter-banner-text');
+  if (hasFilter && banner) {
+    banner.classList.add('visible');
+    bannerTx.textContent = `Showing: ${statusFilter}`;
+  } else if (banner) {
+    banner.classList.remove('visible');
+  }
+
+  // Update clear button in sidebar
+  const clearBtn = document.getElementById('filter-clear');
+  if (clearBtn) clearBtn.style.display = hasFilter ? 'inline' : 'none';
+
+  if (!hasSearch && !hasFilter) {
     filteredData = null;
     renderStubs(allSections);
     setupLazyLoad();
     updateSidebarCounts(allSections);
     setupScrollSpy();
+    updateHeaderStats(allSections);
     return;
   }
 
   const filtered = allSections.map(s => ({
     ...s,
-    questions: s.questions.filter(q =>
-      q.question.toLowerCase().includes(searchQuery) ||
-      q.subTopics.some(t => t.toLowerCase().includes(searchQuery))
-    ),
+    questions: s.questions.filter(q => {
+      const matchesSearch = !hasSearch ||
+        q.question.toLowerCase().includes(searchQuery) ||
+        q.subTopics.some(t => t.toLowerCase().includes(searchQuery));
+      const matchesStatus = !hasFilter ||
+        (userProgress[q.id] || 'Not Started') === statusFilter;
+      return matchesSearch && matchesStatus;
+    }),
   })).map(s => ({ ...s, count: s.questions.length }));
 
   filteredData = filtered;
   const nonEmpty = filtered.filter(s => s.questions.length > 0);
 
   if (nonEmpty.length === 0) {
-    document.getElementById('main').innerHTML =
-      `<div class="no-results">No questions found matching "<strong>${escHtml(searchQuery)}</strong>"</div>`;
+    const msg = hasSearch && hasFilter
+      ? `No "${statusFilter}" questions matching "<strong>${escHtml(searchQuery)}</strong>"`
+      : hasFilter
+        ? `No questions with status "<strong>${escHtml(statusFilter)}</strong>"`
+        : `No questions matching "<strong>${escHtml(searchQuery)}</strong>"`;
+    document.getElementById('main').innerHTML = `<div class="no-results">${msg}</div>`;
     updateSidebarCounts(filtered);
+    updateHeaderStats(filtered);
     return;
   }
 
@@ -772,7 +865,20 @@ function applySearch() {
 
   nonEmpty.forEach(s => renderSectionQuestions(s.slug, searchQuery));
   updateSidebarCounts(filtered);
+  updateHeaderStats(filtered);
   setupScrollSpy();
+}
+
+function updateHeaderStats(sections) {
+  const total = sections.reduce((s, sec) => s + sec.count, 0);
+  const allTotal = allSections.reduce((s, sec) => s + sec.count, 0);
+  const el = document.getElementById('header-stats');
+  if (!el) return;
+  if (total < allTotal) {
+    el.innerHTML = `<strong>${total}</strong> of <strong>${allTotal}</strong> questions`;
+  } else {
+    el.innerHTML = `<strong>${allTotal}</strong> questions · <strong>${allSections.length}</strong> topics`;
+  }
 }
 
 function updateSidebarCounts(sections) {
@@ -905,6 +1011,75 @@ async function expandAllInSection(slug) {
         if (panel) panel.innerHTML = `<div class="answer-loading" style="color:var(--red)">Failed to load</div>`;
       });
   }));
+}
+
+
+// ── STATUS FILTER ──
+function setStatusFilter(status) {
+  statusFilter = status;
+  updateFilterPills();
+  applySearch();
+}
+
+function updateFilterPills() {
+  document.querySelectorAll('.filter-pill').forEach(pill => {
+    pill.classList.toggle('active', pill.dataset.value === statusFilter);
+  });
+  const clearBtn = document.getElementById('filter-clear');
+  if (clearBtn) clearBtn.style.display = statusFilter ? 'inline' : 'none';
+}
+
+// ── SURPRISE ME ──
+async function surpriseMe() {
+  const source = filteredData || allSections;
+  const pool = source.flatMap(s =>
+    s.questions.map(q => ({ ...q, sectionSlug: s.slug }))
+  );
+
+  if (pool.length === 0) return;
+
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+
+  // Ensure section is rendered
+  if (!renderedSlugs.has(pick.sectionSlug)) {
+    renderSectionQuestions(pick.sectionSlug);
+  }
+
+  // Scroll to section first
+  const sectionEl = document.getElementById(pick.sectionSlug);
+  if (sectionEl) sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Wait for scroll + render, then open card
+  await new Promise(r => setTimeout(r, 450));
+
+  // Close any open cards
+  document.querySelectorAll('.question-card.open').forEach(c => c.classList.remove('open'));
+
+  const card  = document.getElementById(`card-${pick.id}`);
+  const panel = document.getElementById(`panel-${pick.id}`);
+  if (!card || !panel) return;
+
+  card.classList.add('open');
+  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  // Highlight card briefly
+  card.style.transition = 'box-shadow 0.3s';
+  card.style.boxShadow  = '0 0 0 2px var(--accent), 0 4px 24px rgba(34,211,238,0.25)';
+  setTimeout(() => { card.style.boxShadow = ''; }, 1800);
+
+  // Load content
+  if (loadedPages[pick.id]) {
+    renderAnswerPanel(panel, loadedPages[pick.id]);
+    return;
+  }
+  try {
+    const res  = await fetch(`/api/page?id=${pick.id}`);
+    const data = await res.json();
+    loadedPages[pick.id] = data;
+    renderAnswerPanel(panel, data);
+  } catch (err) {
+    panel.innerHTML = `<div class="answer-loading" style="color:var(--red)">Failed to load</div>`;
+  }
 }
 
 
