@@ -327,6 +327,98 @@
     transition: all 0.15s;
   }
   .surprise-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(34,211,238,0.04); }
+
+  /* ── DASHBOARD ── */
+  .dashboard { animation: fadeUp 0.3s ease both; }
+  .dash-hero {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px 28px; margin-bottom: 20px; gap: 16px;
+  }
+  .dash-greeting h2 { font-size: 22px; font-weight: 600; }
+  .dash-greeting p  { color: var(--muted); margin-top: 4px; font-size: 14px; }
+
+  .streak-card {
+    text-align: center; background: rgba(251,191,36,0.08);
+    border: 1px solid rgba(251,191,36,0.2); border-radius: var(--radius);
+    padding: 14px 22px; flex-shrink: 0;
+  }
+  .streak-fire  { font-size: 26px; line-height: 1; }
+  .streak-count { font-size: 28px; font-weight: 700; color: var(--amber); line-height: 1.1; }
+  .streak-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .streak-best  { font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+  .dash-section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted); margin: 20px 0 12px;
+  }
+
+  /* Overview row */
+  .dash-overview { display: flex; gap: 24px; align-items: center; margin-bottom: 20px; }
+  .donut-wrap { position: relative; flex-shrink: 0; }
+  .donut-center {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    text-align: center; pointer-events: none;
+  }
+  .donut-pct { font-size: 22px; font-weight: 700; line-height: 1; }
+  .donut-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1; }
+  .stat-item {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 14px;
+  }
+  .stat-num { font-size: 26px; font-weight: 700; line-height: 1; }
+  .stat-lbl { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .stat-item.s-confident  .stat-num { color: var(--green); }
+  .stat-item.s-progress   .stat-num { color: var(--amber); }
+  .stat-item.s-revision   .stat-num { color: var(--red); }
+  .stat-item.s-notstarted .stat-num { color: var(--muted); }
+
+  /* Two-column cards */
+  .dash-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .dash-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
+  .dash-card-title { font-size: 13px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+
+  .section-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); }
+  .section-row:last-child { border-bottom: none; }
+  .section-row-name { font-size: 13px; color: var(--soft); }
+  .section-row-badge { font-size: 11px; font-family: var(--mono); padding: 2px 8px; border-radius: 20px; }
+  .section-row-badge.revision  { background: rgba(248,113,113,0.12); color: var(--red); }
+  .section-row-badge.confident { background: rgba(52,211,153,0.12);  color: var(--green); }
+
+  /* Section progress bars */
+  .section-prog-item { margin-bottom: 10px; }
+  .section-prog-header { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+  .section-prog-name { color: var(--soft); }
+  .section-prog-pct  { color: var(--muted); font-family: var(--mono); }
+  .section-prog-bar  { height: 4px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
+  .section-prog-fill { height: 100%; border-radius: 4px; background: var(--green); transition: width 0.6s ease; }
+
+  /* Recent activity */
+  .recent-item {
+    display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px;
+  }
+  .recent-badge { font-size: 11px; font-family: var(--mono); padding: 2px 8px; border-radius: 12px; flex-shrink: 0; white-space: nowrap; }
+  .recent-badge.not-started { background: rgba(100,116,139,0.15); color: var(--muted); }
+  .recent-badge.in-progress { background: rgba(251,191,36,0.12);  color: var(--amber); }
+  .recent-badge.revision    { background: rgba(248,113,113,0.12); color: var(--red); }
+  .recent-badge.confident   { background: rgba(52,211,153,0.12);  color: var(--green); }
+  .recent-question { font-size: 13px; color: var(--soft); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .recent-time     { font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+  /* Sidebar dashboard link */
+  .nav-item.dash-link { border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+
+  /* Empty state */
+  .dash-empty { color: var(--muted); font-size: 13px; padding: 12px 0; text-align: center; }
+
+  @media (max-width: 768px) {
+    .dash-overview  { flex-direction: column; }
+    .dash-two-col   { grid-template-columns: 1fr; }
+    .dash-hero      { flex-direction: column; }
+  }
 </style>
 </head>
 <body>
@@ -416,6 +508,7 @@ let userProgress  = {}; // { questionId: status }
 // Active status picker state
 let pickerQuestionId = null;
 let statusFilter = ''; // active status filter
+let currentView  = 'questions'; // 'questions' | 'dashboard'
 
 // ── BOOT ──
 async function boot() {
@@ -494,6 +587,7 @@ async function doLogout() {
   await fetch('/api/logout', { method: 'POST' });
   currentUser  = null;
   userProgress = {};
+  currentView  = 'questions';
   document.getElementById('user-pill').style.display = 'none';
   document.getElementById('main').innerHTML = '';
   document.getElementById('sidebar').innerHTML = '';
@@ -548,6 +642,10 @@ function renderSidebar(sections) {
   ];
 
   document.getElementById('sidebar').innerHTML =
+    // ── dashboard link ──
+    `<a class="nav-item dash-link ${currentView === 'dashboard' ? 'active' : ''}" onclick="showDashboard()" style="cursor:pointer">
+      <span class="nav-item-left"><span class="nav-icon">📊</span><span>My Dashboard</span></span>
+    </a>` +
     // ── filter section ──
     `<div class="filter-section-header">
       <span class="sidebar-label" style="padding:0">Filter by status</span>
@@ -574,8 +672,18 @@ function renderSidebar(sections) {
   document.querySelectorAll('.nav-item').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
-      document.getElementById(a.dataset.slug)
-        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (currentView !== 'questions') {
+        currentView = 'questions';
+        const source = filteredData?.filter(s => s.questions.length > 0) || allSections;
+        renderStubs(source);
+        setupLazyLoad();
+        setupScrollSpy();
+        updateSidebarActiveState();
+      }
+      requestAnimationFrame(() => {
+        document.getElementById(a.dataset.slug)
+          ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     });
   });
 }
@@ -723,7 +831,16 @@ async function setStatus(status) {
     const res = await fetch('/api/progress', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ questionId, status }),
+      body: JSON.stringify({
+          questionId, status,
+          questionTitle: (() => {
+            for (const s of allSections) {
+              const q = s.questions.find(q => q.id === questionId);
+              if (q) return q.question.slice(0, 200);
+            }
+            return '';
+          })(),
+        }),
     });
     if (!res.ok) throw new Error('Save failed');
   } catch (err) {
@@ -1080,6 +1197,238 @@ async function surpriseMe() {
   } catch (err) {
     panel.innerHTML = `<div class="answer-loading" style="color:var(--red)">Failed to load</div>`;
   }
+}
+
+
+// ── DASHBOARD ──
+async function showDashboard() {
+  currentView = 'questions'; // temp — prevent flash
+  currentView = 'dashboard';
+  updateSidebarActiveState();
+
+  const main = document.getElementById('main');
+  main.innerHTML = `<div class="state-box"><div class="spinner" style="width:24px;height:24px;margin:0 auto 16px;border-width:3px"></div><h3>Loading dashboard…</h3></div>`;
+
+  try {
+    const res = await fetch('/api/dashboard');
+    if (!res.ok) throw new Error('Failed to load');
+    const { streak, recent } = await res.json();
+    const stats = computeStats();
+    main.innerHTML = renderDashboard(stats, streak, recent);
+  } catch (err) {
+    main.innerHTML = `<div class="state-box"><h3>Failed to load dashboard</h3><p>${escHtml(err.message)}</p></div>`;
+  }
+}
+
+function updateSidebarActiveState() {
+  document.querySelectorAll('.nav-item.dash-link').forEach(el => {
+    el.classList.toggle('active', currentView === 'dashboard');
+  });
+}
+
+function computeStats() {
+  const counts = { 'Not Started': 0, 'In Progress': 0, 'Revision Needed': 0, 'Confident': 0 };
+  const total  = allSections.reduce((s, sec) => s + sec.questions.length, 0);
+
+  allSections.forEach(sec =>
+    sec.questions.forEach(q => {
+      const st = userProgress[q.id] || 'Not Started';
+      counts[st]++;
+    })
+  );
+
+  const sectionStats = allSections
+    .filter(s => s.questions.length > 0)
+    .map(s => {
+      const sc = { 'Not Started': 0, 'In Progress': 0, 'Revision Needed': 0, 'Confident': 0 };
+      s.questions.forEach(q => { sc[userProgress[q.id] || 'Not Started']++; });
+      const pct = s.questions.length > 0
+        ? Math.round((sc['Confident'] / s.questions.length) * 100) : 0;
+      return { name: s.name, icon: s.icon, slug: s.slug, total: s.questions.length, counts: sc, pct };
+    });
+
+  const weakest   = [...sectionStats].filter(s => s.counts['Revision Needed'] > 0)
+    .sort((a, b) => b.counts['Revision Needed'] - a.counts['Revision Needed']).slice(0, 4);
+  const strongest = [...sectionStats].filter(s => s.counts['Confident'] > 0)
+    .sort((a, b) => b.counts['Confident'] - a.counts['Confident']).slice(0, 4);
+
+  return { total, counts, sectionStats, weakest, strongest };
+}
+
+function buildDonut(counts, total, cx, cy, R, r) {
+  if (total === 0) return `<circle cx="${cx}" cy="${cy}" r="${(R+r)/2}" fill="none" stroke="var(--border)" stroke-width="${(R-r)}"/>`;
+
+  const segs = [
+    { key: 'Confident',      color: '#34d399' },
+    { key: 'In Progress',    color: '#fbbf24' },
+    { key: 'Revision Needed',color: '#f87171' },
+    { key: 'Not Started',    color: '#1e2535' },
+  ];
+
+  let angle = -Math.PI / 2;
+  let paths = '';
+  const TAU = 2 * Math.PI;
+
+  segs.forEach(({ key, color }) => {
+    const count = counts[key] || 0;
+    if (count === 0) return;
+    const sweep = (count / total) * TAU;
+    const end   = angle + sweep;
+    const large = sweep > Math.PI ? 1 : 0;
+    const f     = n => n.toFixed(2);
+    const ox1 = cx + R * Math.cos(angle), oy1 = cy + R * Math.sin(angle);
+    const ox2 = cx + R * Math.cos(end),   oy2 = cy + R * Math.sin(end);
+    const ix1 = cx + r * Math.cos(angle), iy1 = cy + r * Math.sin(angle);
+    const ix2 = cx + r * Math.cos(end),   iy2 = cy + r * Math.sin(end);
+    paths += `<path fill="${color}" d="M ${f(ox1)} ${f(oy1)} A ${R} ${R} 0 ${large} 1 ${f(ox2)} ${f(oy2)} L ${f(ix2)} ${f(iy2)} A ${r} ${r} 0 ${large} 0 ${f(ix1)} ${f(iy1)} Z" stroke="var(--bg)" stroke-width="1.5"/>`;
+    angle = end;
+  });
+  return paths;
+}
+
+function timeAgo(iso) {
+  if (!iso) return '';
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  const h = Math.floor(diff / 3600000);
+  const d = Math.floor(diff / 86400000);
+  if (m < 1)  return 'just now';
+  if (m < 60) return `${m}m ago`;
+  if (h < 24) return `${h}h ago`;
+  return `${d}d ago`;
+}
+
+function renderDashboard(stats, streak, recent) {
+  const { total, counts, sectionStats, weakest, strongest } = stats;
+  const confidentPct = total > 0 ? Math.round((counts['Confident'] / total) * 100) : 0;
+  const donutSVG = buildDonut(counts, total, 70, 70, 58, 36);
+
+  // greeting
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+
+  // streak section
+  const streakCount   = streak?.count   || 0;
+  const streakLongest = streak?.longest || 0;
+  const streakHTML = `
+    <div class="streak-card">
+      <div class="streak-fire">${streakCount > 0 ? '🔥' : '💤'}</div>
+      <div class="streak-count">${streakCount}</div>
+      <div class="streak-label">day streak</div>
+      ${streakLongest > 1 ? `<div class="streak-best">best: ${streakLongest}</div>` : ''}
+    </div>`;
+
+  // stat grid
+  const statGrid = `
+    <div class="stat-grid">
+      <div class="stat-item s-confident">
+        <div class="stat-num">${counts['Confident']}</div>
+        <div class="stat-lbl">Confident</div>
+      </div>
+      <div class="stat-item s-revision">
+        <div class="stat-num">${counts['Revision Needed']}</div>
+        <div class="stat-lbl">Needs Revision</div>
+      </div>
+      <div class="stat-item s-progress">
+        <div class="stat-num">${counts['In Progress']}</div>
+        <div class="stat-lbl">In Progress</div>
+      </div>
+      <div class="stat-item s-notstarted">
+        <div class="stat-num">${counts['Not Started']}</div>
+        <div class="stat-lbl">Not Started</div>
+      </div>
+    </div>`;
+
+  // weakest / strongest
+  const weakestHTML = weakest.length === 0
+    ? '<div class="dash-empty">No revision needed yet 🎉</div>'
+    : weakest.map(s => `
+        <div class="section-row">
+          <span class="section-row-name">${s.icon} ${s.name}</span>
+          <span class="section-row-badge revision">${s.counts['Revision Needed']} revision</span>
+        </div>`).join('');
+
+  const strongestHTML = strongest.length === 0
+    ? '<div class="dash-empty">Keep going — mark questions confident!</div>'
+    : strongest.map(s => `
+        <div class="section-row">
+          <span class="section-row-name">${s.icon} ${s.name}</span>
+          <span class="section-row-badge confident">${s.counts['Confident']} confident</span>
+        </div>`).join('');
+
+  // section progress bars (only sections with questions, sorted by pct asc)
+  const progBars = [...sectionStats]
+    .sort((a, b) => a.pct - b.pct)
+    .map(s => `
+      <div class="section-prog-item">
+        <div class="section-prog-header">
+          <span class="section-prog-name">${s.icon} ${s.name}</span>
+          <span class="section-prog-pct">${s.pct}%</span>
+        </div>
+        <div class="section-prog-bar">
+          <div class="section-prog-fill" style="width:${s.pct}%"></div>
+        </div>
+      </div>`).join('');
+
+  // recent activity
+  const recentHTML = recent.length === 0
+    ? '<div class="dash-empty">No activity yet — start marking questions!</div>'
+    : recent.map(r => {
+        const badgeCls = {
+          'Not Started': 'not-started', 'In Progress': 'in-progress',
+          'Revision Needed': 'revision',  'Confident':    'confident',
+        }[r.status] || '';
+        return `
+          <div class="recent-item">
+            <span class="recent-badge ${badgeCls}">${r.status}</span>
+            <span class="recent-question">${escHtml(r.questionTitle || r.questionId)}</span>
+            <span class="recent-time">${timeAgo(r.timestamp)}</span>
+          </div>`;
+      }).join('');
+
+  return `
+    <div class="dashboard">
+      <div class="dash-hero">
+        <div class="dash-greeting">
+          <h2>${greet}, ${escHtml(currentUser)}! 👋</h2>
+          <p>${confidentPct}% confident · ${total} questions across ${allSections.length} topics</p>
+        </div>
+        ${streakHTML}
+      </div>
+
+      <div class="dash-section-label">Overall Progress</div>
+      <div class="dash-overview">
+        <div class="donut-wrap">
+          <svg width="140" height="140" viewBox="0 0 140 140">
+            ${donutSVG}
+          </svg>
+          <div class="donut-center">
+            <div class="donut-pct" style="color:${confidentPct === 100 ? 'var(--green)' : confidentPct > 50 ? 'var(--accent)' : 'var(--soft)'}">${confidentPct}%</div>
+            <div class="donut-sub">confident</div>
+          </div>
+        </div>
+        ${statGrid}
+      </div>
+
+      <div class="dash-two-col">
+        <div class="dash-card">
+          <div class="dash-card-title">⚠️ Needs Work</div>
+          ${weakestHTML}
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-title">✅ Strong Areas</div>
+          ${strongestHTML}
+        </div>
+      </div>
+
+      <div class="dash-section-label">Section Progress</div>
+      <div class="dash-card" style="margin-bottom:20px">
+        ${progBars || '<div class="dash-empty">Start marking questions to see progress</div>'}
+      </div>
+
+      <div class="dash-section-label">Recent Activity</div>
+      ${recentHTML}
+    </div>`;
 }
 
 
